@@ -1,0 +1,36 @@
+
+
+S3
+---
+
+error:
+------
+Initializing the backend...
+╷
+│ Error: Error loading state:
+│     AccessDenied: Access Denied
+│       status code: 403, request id: KZ1NEQMGWK3V7NKQ, host id: KvK5RZNd5CMZ4qTMYpEMzkqrUVYWvREhbtH7pwBZmkLEUZldK5MGdXBg4tkLG3N8s3TWvpq3MXU=
+│
+│ Terraform failed to load the default state from the "s3" backend.
+│ State migration cannot occur unless the state can be loaded. Backend
+│ modification and state migration has been aborted. The state in both the
+│ source and the destination remain unmodified. Please resolve the
+│ above error and try again.
+
+
+
+1. goto s3 bucket --> permisssion --> unblock public ip --> edit the policy paste the below code.
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::yourbucketname/*"
+        }
+    ]
+}
