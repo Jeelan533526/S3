@@ -1,0 +1,564 @@
+
+What is docker?
+---------------
+Docker is an open platform for developing, shipping, and running applications.
+
+
+Docker architecture
+-------------------
+
+
+Docker Image:
+-------------
+A Docker Image is a read-only file with a bunch of instructions. it creates a Docker container.
+
+Dockerfile:
+------------
+Dockerfile is a simple text file that consists of instructions to build Docker images.
+
+Containers:
+-----------
+A container is a runnable instance of an image. You can create, start, stop, move, or delete a container using the Docker API or CLI.
+
+
+
+
+
+
+
+
+
+
+
+
+Commands
+........
+
+Copy file local to server = 	scp -i mylinux.pem -r mylinux.pem ec2-user@3.109.216.230:/tmp
+
+Apache httpd script = 	#! /bin/bash
+			sudo yum update -y
+			sudo yum install httpd -y
+			sudo systemctl start httpd
+			sudo systemctl enable httpd
+			Sudo echo "<h1>This for sample</h1>" > index.html
+			Sudo mv index.html /var/www/html
+
+
+Docker commands:
+------------------
+
+Docker install =	sudo docker yum install -y
+
+Docker start =		sudo systemctl start docker
+
+Docker os level enable =	sudo systemctl enable docker
+
+How to check docker verison = 	sudo docker -v
+
+how to see list runnig containers =	docker ps
+
+how to check docker images =	docker images
+
+how to add docker to ec2-user =	usermod -a -G docker ec2-user
+
+how to check memory space =	free -h
+
+How to install tomcat 8 in docker =	docker run -d -p 8080:8080 tomcat:8
+													host:port no	  tomcat verison
+
+How to install apache (image) =		docker run -d -p 80:80 httpd
+
+How to install apache (container)=	docker run -d -p 80:80 <image id>
+
+How to login containers =	docker exec -it <container id> bash
+
+how to chage image tag name = sudo docker tag <image id> <image name>
+
+
+Infermation about docker = 	docker info
+
+List of stopped & running containers = docker ps -a
+
+list of latest conatiner = 	docker -l
+
+how to search =		docker search <ex: apache2>
+
+I want to install java 1.8 in docker
+------------------------------------
+
+go to docker instance
+search java 1.8 --> select open jdk --> select tag --> copy the tag & paste it in command line tool(git bash)
+
+
+how to run the tomcat with the name =	docker run -it --name <container name> tomcat:8
+						-it means iterative mode it give live logs
+						when we comes out from container it will stop
+
+how to check the logs =	docker logs <contained id>
+
+I want to stop contatines =	1) docker stop <container id>
+				2) docker kill <container id>
+
+how to list the only tomcat containers =	docker ps -s | grep -i tomcat
+
+how to install tomcat from local (git bash)
+-------------------------------------------
+docker search tomcat 8 
+copy the what ever you want --> docker pull <paste it>
+				docker iamges (it will show here)
+
+how to list out the running containers id's =	docker ps -q
+
+how to list out the running & stopped containers id's =	docker ps -aq
+
+how to remove containers =	docker rm <container id>
+
+how to remove running containers at a time =	docker rm $(docker ps -q)
+
+how to remove running & stopped containers at a time =	docker rm $(docker ps -aq)
+
+how to see live logs =		docker logs -f <container id>
+
+how to install vertul machines:
+------------------------------
+
+docker run -it centos
+pulling form libraries/local
+
+how to go to docker = Control p q 
+
+then checck centos machine came or not =	docker ps
+
+how to commit =	 docker commit -a "message" <container id> <name>  --> see the container imgages it will reflect here
+
+Docker file
+----------
+FROM centos
+MAINTAINER Jeelan
+RUN yum install httpd -y
+COPY index.html /var/www/html
+EXPOSE 80
+CMD apachectl -D FOREGROUND
+
+after creating docker file we have to build = docker build .
+
+
+curl 0.0.0.0:80 for see html file
+
+
+How to edit file in Docker conatiner
+------------------------------------
+
+go to container --> docker exec -it <conatiner id> bash --> here install vim -->
+
+apt-get update -y --> apt-get install vim --> it will install and use vim for editing the file.
+
+
+
+tomcat installation in docker container
+----------------------------------------
+
+1) how to install tomcat in docker 
+
+docker run -d -p 8080:8080 tomcat:8
+
+2)how to check images
+
+  docker images
+  
+3)how to checck container list
+docker ps
+
+4) how to check status
+curl  0.0.0.0:8080
+error:
+Ans) 
+<!doctype html><html lang="en"><head><title>HTTP Status 404 – Not Found</title><style type="text/css">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 – Not Found</h1><hr class="line" /><p><b>Type</b> Status Report</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class="line" /><h3>Apache Tomcat/8.5.73</h3></body></html>
+then we need to eneter in container
+	i)docker exec -it ab31fbd56350 bash
+	
+	
+	root@ab31fbd56350:/usr/local/tomcat# ls
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  README.md  RELEASE-NOTES  RUNNING.txt  bin  conf  lib  logs  native-jni-lib  temp  webapps  webapps.dist  work
+root@ab31fbd56350:/usr/local/tomcat# cd webapps
+root@ab31fbd56350:/usr/local/tomcat/webapps# ls
+root@ab31fbd56350:/usr/local/tomcat/webapps# ls
+root@ab31fbd56350:/usr/local/tomcat/webapps# cd ..
+root@ab31fbd56350:/usr/local/tomcat# cd webapps.dist/
+root@ab31fbd56350:/usr/local/tomcat/webapps.dist# cp -R * ../webapps
+root@ab31fbd56350:/usr/local/tomcat/webapps.dist# cd ..
+root@ab31fbd56350:/usr/local/tomcat# ls
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  README.md  RELEASE-NOTES  RUNNING.txt  bin  conf  lib  logs  native-jni-lib  temp  webapps  webapps.dist  work
+root@ab31fbd56350:/usr/local/tomcat# cd webapps
+root@ab31fbd56350:/usr/local/tomcat/webapps# ls
+ROOT  docs  examples  host-manager  manager
+root@ab31fbd56350:/usr/local/tomcat/webapps# cd manager/
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager# ls
+META-INF  WEB-INF  css  images  index.jsp  status.xsd  xform.xsl
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager# cd META-INF/
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager/META-INF# ls
+context.xml
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager/META-INF# vim context.xml
+bash: vim: command not found
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager/META-INF# apt update -y
+Get:1 http://security.debian.org/debian-security bullseye-security InRelease [44.1 kB]
+Get:2 http://deb.debian.org/debian bullseye InRelease [116 kB]
+Get:3 http://deb.debian.org/debian bullseye-updates InRelease [39.4 kB]
+Get:4 http://security.debian.org/debian-security bullseye-security/main amd64 Packages [99.5 kB]
+Get:5 http://deb.debian.org/debian bullseye/main amd64 Packages [8180 kB]
+Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [2592 B]
+Fetched 8481 kB in 2s (5247 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager/META-INF# apt install vim
+
+after installing vim
+-------------------
+
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager/META-INF# ls
+context.xml
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager/META-INF# vim context.xml
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager/META-INF# cd ..
+root@ab31fbd56350:/usr/local/tomcat/webapps/manager# cd ..
+root@ab31fbd56350:/usr/local/tomcat/webapps# ls
+ROOT  docs  examples  host-manager  manager
+root@ab31fbd56350:/usr/local/tomcat/webapps# cd ..
+root@ab31fbd56350:/usr/local/tomcat# ls
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  README.md  RELEASE-NOTES  RUNNING.txt  bin  conf  lib  logs  native-jni-lib  temp  webapps  webapps.dist  work
+root@ab31fbd56350:/usr/local/tomcat# cd conf/
+root@ab31fbd56350:/usr/local/tomcat/conf# ls
+Catalina  catalina.policy  catalina.properties  context.xml  jaspic-providers.xml  jaspic-providers.xsd  logging.properties  server.xml  tomcat-users.xml  tomcat-users.xsd  web.xml
+root@ab31fbd56350:/usr/local/tomcat/conf# vi tomcat-users.xml
+
+
+History
+--------
+  1  ls
+    2  cd webapps
+    3  ls
+    4  ls
+    5  cd ..
+    6  cd webapps.dist/
+    7  cp -R * ../webapps
+    8  cd ..
+    9  ls
+   10  cd webapps
+   11  ls
+   12  cd manager/
+   13  ls
+   14  cd META-INF/
+   15  ls
+   16  vim context.xml
+   17  apt update -y
+   18  apt install vim
+   19  ls
+   20  vim context.xml
+   21  cd ..
+   22  cd ..
+   23  ls
+   24  cd ..
+   25  ls
+   26  cd conf/
+   27  ls
+   28  vi tomcat-users.xml
+   29  curl 0.0.0.0:8080
+   30  git history
+   31  history
+
+
+Httpd installation history
+--------------------------
+
+	vi index.html
+	
+	error vi command not found
+	
+      apt update -y
+      apt install vim
+	 
+   index.html path --> root@1265f08ed2fc:/usr/local/apache2/htdocs#
+
+     vi index.html
+	 
+	 here edit the index.html file
+   
+
+
+
+How to install jenkins & How to add Slave
+----------------------------------------
+
+launch instance -> login in git bash -> update -> 
+
+sudo yum install java -y
+
+sudo wget -O /etc/yum.repos.d/jenkins.repo \ https://pkg.jenkins.io/redhat/jenkins.repo
+
+sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+
+sudo yum install jenkins (if it is not installed)
+
+sudo amazon-linux-extras install epel -y
+
+sudo yum install jenkins
+
+sudo systemctl status jenkins
+
+check in browser = IP:8080
+
+then run Test project it will generate workspace
+
+new project - free style - configure - open shell - pwd- save - build now.
+
+
+for Java project maven need to be installed.
+
+How to install slave
+--------------------
+
+launch instance -> login in git bash 
+
+Goto jenkins - manage jenkins - manage nodes - new node - configure - give here slave ip and privatekey.
+
+for java projects we need to install maven.
+
+for git hub projects we need to install git (sudo yum install git)
+
+
+How to install java
+-------------------
+
+1) sudo yum install java -y
+
+2)  i)sudo amazon-linux-extras list
+    ii) sudo amazon-linux-extras java-openjdk11
+
+
+How to install sonarQube
+----------------------
+
+install java
+
+	 i)sudo amazon-linux-extras list
+   	 ii) sudo amazon-linux-extras install java-openjdk11
+		check java -version
+
+we have to add user for soanarqube
+
+	sudo useradd sonar
+	sudo passwd sonar
+
+sudo vi /etc/ssh/sshd_config
+	uncomment password yes
+	comment passoword no
+
+sudo systemctl restart sshd
+sudo visudo
+	here add sonar user
+
+login with sonar (ssh sonar@public ip)
+
+cd /opt/
+download sonarqube
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.2.46101.zip
+unzip
+> change permission 
+sudo chown -R sonar:sonar sonar
+
+start SonarQube
+
+cd /sonar/bin/linux 86/
+
+./sonar.sh start
+
+How to check stats (ps -ef | grep -i sonar)
+
+sonarQube port no: 9000
+
+publicip:9000
+
+
+How to attach jenkis
+--------------------
+
+Login jenkins --> check java version should be java open jdk 11
+
+login --> public ip:8080
+
+install pluggins --> sonar scanner
+
+
+
+
+How to push image to dockerHub
+----------------------------
+
+*first pull the image from docker hub and modify the changes(update, Install the packages)
+
+	docker pull httpd
+	
+	docker run -d -p 80:80 <image id>
+	
+	docker ps
+	
+	* container is running....
+	
+	docker exec -it <container id> bash
+	
+	* install httpd or some othe packages etc...
+	
+	*exit the containers 
+	
+	  docker ps 
+	  
+	  docker commit <container id> jeelan5335/httpd:latest
+								dockerhub username/name:tag
+								
+	 docker images
+	 
+	 see here the image with the name of jeelan5335/httpd
+	 
+	 *Login to dockerhum
+	 
+		docker login
+		
+	*push the image to dockerhub
+	
+		docker push <image id>
+
+
+
+
+
+Docker integration with Jenkins
+--------------------------------
+
+* Launch one ec2 instance and install Docker & Jenkins.
+
+Docker Installation
+-------------------
+
+		*Docker installation steps using default repository from Ubuntu
+		 Update local packages by executing below command:
+
+			sudo apt-get update
+
+		*Install the below packages
+		
+			sudo apt install gnupg2 pass -y
+
+		*gnupg2 is tool for secure communication and data storage. It can be used to encrypt data and to create digital signatures
+ 
+		*Install docker
+
+			sudo apt install docker.io -y
+
+		*Add Ubuntu user to Docker group
+
+			sudo usermod -aG docker $USER
+
+
+		*The Docker service needs to be setup to run at startup. To do so, type in each command followed by enter:
+
+			sudo systemctl start docker
+			sudo systemctl enable docker
+			sudo systemctl status docker
+			
+			
+Jenkins Inatsllation
+--------------------
+
+* Install Java & Jenkins as per the document.
+
+after installing ...
+
+Steps:
+
+*Add jenkins user to Docker group
+
+	sudo usermod -a -G docker jenkins
+
+*Restart Jenkins service
+	
+	service jenkins restart
+
+*Reload system daemon files
+
+	sudo systemctl daemon-reload
+
+*Restart Docker service as well
+
+	sudo service docker stop
+	sudo service docker start
+	
+* Install Docker pluggins
+* Install Docker pipeline pluggins
+
+* Add Docker hub credentials in --> manage credentials
+
+
+Pipeline.
+-----------
+
+
+pipeline {
+    agent any 
+    environment {
+        //once you sign up for Docker hub, use that user_id here
+        registry = "your_docker_user_id/mypythonapp"
+        //- update your credentials ID after creating credentials for connecting to Docker Hub
+        registryCredential = 'fa32f95a-2d3e-4c7b-8f34-11bcc0191d70'
+        dockerImage = ''
+    }
+    
+    stages {
+        stage('Cloning Git') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://bitbucket.org/ananthkannan/mypythonrepo']]])       
+            }
+        }
+    
+    // Building Docker images
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry
+        }
+      }
+    }
+    
+     // Uploading Docker images into Docker Hub
+    stage('Upload Image') {
+     steps{    
+         script {
+            docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+            }
+        }
+      }
+    }
+    
+     // Stopping Docker containers for cleaner Docker run
+     stage('docker stop container') {
+         steps {
+            sh 'docker ps -f name=mypythonappContainer -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=mypythonappContainer -q | xargs -r docker container rm'
+         }
+       }
+    
+    
+    // Running Docker container, make sure port 8096 is opened in 
+    stage('Docker Run') {
+     steps{
+         script {
+            dockerImage.run("-p 8096:5000 --rm --name mypythonappContainer")
+         }
+      }
+    }
+  }
+}
+
+

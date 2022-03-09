@@ -1,0 +1,15 @@
+
+1)establish the ssh connection b/w two servers
+
+	ssh-keygen
+	
+take id_rsa.pub key and paste it remote server (cd .ssh/ --> authorizedkey)
+
+
+use the command for copy the file or directory
+---------------------------------------------
+
+scp -r <file name> <remote server ip:remote server destination path>
+
+jenkins: it also applicable for jenkins also for copying jobs etc.
+-------

@@ -1,0 +1,45 @@
+
+
+
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('checkout'){
+            steps{
+                checkout([$class: 'GitSCM', branches: [[name: '*/Dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github', url: 'https://github.com/Jeelan533526/Gitpublish.git']]])
+            }
+        }
+		stage('Pull') {
+        environment { 
+            GIT_AUTH = credentials('Github') 
+        }
+        steps {
+            bat('''
+                git config --local credential.helper "!f() { echo username=Jeelan533526; echo password=Jeelan@202; }; f"
+                git pull origin HEAD:main
+            ''')
+        }
+    }
+		
+   stage('Push') {
+        environment { 
+            GIT_AUTH = credentials('Github') 
+        }
+        steps {
+            bat('''
+                git config --local credential.helper "!f() { echo username=Jeelan533526; echo password=Jeelan@202; }; f"
+                git push origin HEAD:main
+            ''')
+        }
+    }
+    }
+    }
+
+

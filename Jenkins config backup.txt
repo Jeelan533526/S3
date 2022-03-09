@@ -1,0 +1,13 @@
+
+first install thin backup pluggin
+
+goto manage jenkins --> scrolldown --> thin backup --> setting --> bacup.
+
+
+Before that we have to create directory in server for backup purpose.
+
+Login to server (CLI) --> create directory in /opt/jenkins_bacup (mkdir /opt/jenkins_bacup)
+
+Change directory perimissions jenkins (chown -R jenkins:jenkins /jenkins_bacup)
+
+now you can backup.

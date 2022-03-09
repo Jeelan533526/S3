@@ -1,0 +1,186 @@
+
+
+Ansible
+--------
+
+configiguration tool
+		Ex: creating users in multiple servers
+			updatin packages in multiple servers
+			creating files in multiple servers comes under configuration.
+
+some of configiguration tools are 
+
+	Ansible -- playbook
+	puppet -- manifesto
+	chef
+
+
+* Ansible unique feature is Push method. --> python must be installed in clints.
+
+* Puppet and chef are pull methods (Agent will check every time in master if any updates available or not)
+
+
+Desired state: server should have user1 and user2, nginx web server should be installed.
+				in desired state if we delete some files or settings it will retrive the all files and settings when its run.
+
+	
+Ansible Archetecture
+
+--------------------
+
+
+
+
+Configureation drift:
+---------------------
+
+
+
+
+Ansible Installation
+--------------------
+* first we have to install 3 server.
+1) controller (server)
+2) clint1
+3) clint2
+
+*we have to set passwd for root for all 3 servers
+
+*login to controller server
+
+*install ansible in controller server
+
+
+$ sudo apt update
+$ sudo apt install software-properties-common
+$ sudo add-apt-repository --yes --update ppa:ansible/ansible
+$ sudo apt install ansible
+	
+
+
+commands
+--------
+
+sudo su -
+
+passwd
+
+*set password for all three servers and enable paswordAuthentication
+
+vi /etc/ssh/sshd_config
+
+	PermitRootLogin yes
+	paswordAuthentication yes
+	
+service sshd restart
+
+* do for three servers
+
+
+* set hostname for all three servers
+
+	vi /etc/hostname
+*change hostname for all three servers.
+
+* add hosts
+
+	vi /etc/hosts
+* remove all content add below content.
+	ex: private Ip		controller.local	controller
+	
+*add same as three servers
+
+
+* Generate key in controller server.
+
+		ssh-keygen
+		
+* then copy the key in all servers
+	
+		ssh-copy-id	root@clint
+		
+* it will copy the key in clint server now check whether it is login or not.
+
+	ssh root@clint
+	
+* do for clint2 server also.
+
+*create hosts
+    
+	ex:- vi hosts
+			[servers]
+			controller
+			clint1
+			clint2
+
+
+ad hoc commands
+----------------
+
+* ansible -i hosts -m ping all
+
+* ansible -i hosts -a uptime all
+
+* ansible -i hosts -a "useradd Jeelan" clint1 (it will create the user in clint1)
+
+* ansible -i hosts -a "userdel Jeelan" clint1 (it will delete the user in clint1)
+
+* ansible -i hosts -a "cat /etc/passwd" clint1 (we can see the user in clint1)
+
+
+ansible-playbook -i hosts plabook.yml --syntax-check
+
+
+
+
+* ansible -i hosts all -m ping
+
+* ansible -i hosts all -m ping -f 1
+
+* ansible -i hosts all -m command -a hostname
+
+* ansible -i hosts all -m command -a uptime
+
+* ansible -i hosts all -m command -a free
+
+* ansible -i hosts all -m command -a df -h
+
+* ansible app -s -a "yum install -y docker-engine"
+
+* ansible -i hosts all -a "cat /etc/passwd"
+
+* ansible -i hosts all -m user -a "user=Jeelan password=jeelan"
+
+* ansible web -m copy -a "src=/opt/text.txt dest=/tmp/text.txt"
+
+
+
+we have multiple servers in hosts file.
+	ex:
+	
+		[web]
+		controller(server)
+		[app]
+		clint1
+		[db]
+		clint2
+	
+	ansible -i hosts web -a uptime
+	*it will print web servers uptime
+	
+	ansible -i hosts web:app -a uptime
+	*it will print web and app servers uptime
+	
+	ansible -i hosts web:app:db -a uptime
+	*it will print web and app and db servers uptime
+
+	* web i have multiple servers i need to see 1st two servers uptime.
+	ansible -i hosts web[0:2] -a uptime
+	
+
+
+
+
+
+
+
